@@ -1,0 +1,24 @@
+{
+  "name": "ntt-token-deployment",
+  "version": "1.0.0",
+  "description": "**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "build:forge": "forge build",
+    "build:hardhat": "npx hardhat compile",
+    "build": "npm run build:forge; npm run build:hardhat",
+    "clean:forge": "forge clean",
+    "clean:hardhat": "npx hardhat clean",
+    "clean": "npm run clean:forge; npm run clean:hardhat",
+    "format": "prettier --write .",
+    "script": "npx tsx",
+    "typechain": "typechain --target ethers-v6 --out-dir ./ts-scripts/ethers-contracts ./out/**/*.json"
+  },
+  "devDependencies": {
+    "@typechain/ethers-v6": "^0.5.1"
+  }
+}
