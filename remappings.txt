@@ -1,2 +1,3 @@
 @wormhole-solidity-sdk/=lib/wormhole-solidity-sdk/src/
-@openzeppelin/=lib/openzeppelin-contracts/
+@zeppelin/=lib/openzeppelin-contracts/
+@openzeppelin/=node_modules/@openzeppelin/

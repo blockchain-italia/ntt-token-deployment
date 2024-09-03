@@ -1,0 +1,24 @@
+[
+  {
+    "description": "ethereumSepolia",
+    "token": "0x3B7C6e3f75D796c3b7cC90D4cDe1B335536B9CC6",
+    "mode": 0,
+    "chainId": 10002,
+    "rateLimitDuration": 3600,
+    "skipRateLimit": false,
+    "threshold": 1,
+    "outboundLimit": 4000000000000000000000000,
+    "inboundLimit": [{ "chainId": 10003, "limit": "120000000000000000000000" }]
+  },
+  {
+    "description": "arbitrumSepolia",
+    "token": "0x55Dd1ddA6FD843f884e9dC65944FCa9A092040Bb",
+    "mode": 1,
+    "chainId": 10003,
+    "rateLimitDuration": 3600,
+    "skipRateLimit": false,
+    "threshold": 1,
+    "outboundLimit": 100000000000000000000,
+    "inboundLimit": [{ "chainId": 10002, "limit": "1000000000000000000000000" }]
+  }
+]

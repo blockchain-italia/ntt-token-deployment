@@ -2,7 +2,7 @@
 pragma solidity 0.8.23;
 
 import "./external/Initializable.sol";
-import "@openzeppelin/contracts/proxy/ERC1967/ERC1967Upgrade.sol";
+import "@zeppelin/contracts/proxy/ERC1967/ERC1967Upgrade.sol";
 
 /// @dev This contract should be used as a base contract for implementation contracts
 ///      that are used with ERC1967Proxy.
