@@ -1,113 +1,10 @@
 import { ethers, Wallet } from "ethers";
-import { AdapterType, LoanTypeId } from "@folks-finance/xchain-sdk";
 import { readFileSync, writeFileSync, existsSync } from "fs";
-import { convertStringToBytes } from "../../test/utils/bytes";
 import CONFIG from "../testnet/config.json";
-import POOLS from "../testnet/pools.json";
-import { Feed } from "./priceNodes";
 
 export type ChainDescription = "avalancheFuji" | "ethereumSepolia" | "baseSepolia" | "arbitrumSepolia" | "bscTestnet";
 
-export type LoanTypeDescription = "deposit" | "general";
-
-export type TokenTypeDescription = "native" | "erc20" | "circle";
-
-export type TokenDescription =
-  | "USDC"
-  | "AVAX"
-  | "ETH_eth_sep"
-  | "ETH_base_sep"
-  | "ETH_arb_sep"
-  | "LINK_eth_sep"
-  | "BNB";
-
-const DEPLOYED_CONTRACTS_FILE_PATH = "scripts/testnet/deployedContracts.json";
-
-const EMPTY_DEPLOYED_ADDRESSES = (hubDescription: ChainDescription): DeployedContracts => ({
-  hub: {
-    description: hubDescription,
-    bridgeRouter: "",
-    hubAdapter: "",
-    wormholeDataAdapter: "",
-    wormholeCCTPAdapter: "",
-    ccipDataAdapter: "",
-    ccipTokenAdapter: "",
-    hubContract: "",
-    nodeManager: "",
-    oracleManager: "",
-    spokeManager: "",
-    accountManager: "",
-    loanManager: "",
-    libraries: {
-      userLoanLogic: "",
-      loanPoolLogic: "",
-      liquidationLogic: "",
-      loanManagerLogic: "",
-      rewardLogic: "",
-      hubPoolLogic: "",
-    },
-    loanTypes: {},
-    tokens: {},
-  },
-  spokes: {},
-});
-
-export const EMPTY_HUB_TOKEN_DATA = (
-  tokenType: TokenTypeDescription,
-  poolId: number,
-  tokenAddress: string,
-  tokenDecimals: number
-): HubTokenData => ({
-  tokenType,
-  poolId,
-  poolAddress: "",
-  priceNodeId: "",
-  tokenAddress,
-  tokenDecimals,
-  supportedLoanTypes: [],
-});
-
-export const EMPTY_SPOKE_TOKEN_DATA = (
-  tokenType: TokenTypeDescription,
-  poolId: number,
-  tokenAddress: string,
-  tokenDecimals: number
-): SpokeTokenData => ({
-  tokenType,
-  poolId,
-  spokeAddress: "",
-  tokenAddress,
-  tokenDecimals,
-});
-
-const EMPTY_SPOKE_CONTRACT: SpokeContract = {
-  bridgeRouter: "",
-  wormholeDataAdapter: "",
-  wormholeCCTPAdapter: "",
-  ccipDataAdapter: "",
-  ccipTokenAdapter: "",
-  spokeCommon: "",
-  spokeTokens: {},
-};
-
-export interface SpokeTokenData {
-  tokenType: TokenTypeDescription;
-  poolId: number;
-  spokeAddress: string;
-  tokenAddress: string;
-  tokenDecimals: number;
-}
-
-export interface HubTokenData {
-  tokenType: TokenTypeDescription;
-  poolId: number;
-  poolAddress: string;
-  priceNodeId: string;
-  tokenAddress: string;
-  tokenDecimals: number;
-  supportedLoanTypes: LoanTypeDescription[];
-}
-
+export type NttTokenDescription = "FolksToken" | "WormholeToken" | "ETH_eth_sep" | "ETH_base_sep" | "LINK_eth_sep";
 export interface ChainInfo {
   description: ChainDescription;
   folksChainId: number;
@@ -130,141 +27,9 @@ export interface ChainInfo {
     circleMessageTransmitter: string;
   };
 }
-
-export interface LoanTypeInfo {
-  description: LoanTypeDescription;
-  loanTypeId: number;
-  loanTargetHealth: string;
-}
-
-export interface LoanPoolInfo {
-  description: LoanTypeDescription;
-  collateralFactor: string;
-  collateralCap: number;
-  borrowFactor: string;
-  borrowCap: number;
-  liquidationBonus: string;
-  liquidationFee: string;
-  rewardCollateralSpeed: string; // (18+token_decimals) decimals e.g. 1 = 1e24
-  rewardBorrowSpeed: string; // (18+token_decimals) decimals e.g. 1 = 1e24
-  rewardMinimumAmount: string; // e.g. 100 = 100e6 USDC
-}
-
-export interface PoolInfo {
-  description: TokenDescription;
-  tokenType: TokenTypeDescription;
-  listData: {
-    poolId: number;
-    hubTokenAddress: string;
-    spokeTokenAddresses: {
-      chain: ChainDescription;
-      tokenAddress: string;
-    }[];
-    fTokenName: string;
-    fTokenSymbol: string;
-    tokenDecimals: number;
-  };
-  oracleData: {
-    feedId: Feed;
-    backupConstantPrice: string;
-  };
-  poolData: {
-    bucketConfig: {
-      period: number;
-      offset: number;
-      limit: number; // e.g. 100 = 100e6 USDC
-      minBucketLimit?: number; // e.g. 5 = 5e6 USDC
-    };
-    feeData: {
-      flashLoanFee: string;
-      retentionRate: string;
-    };
-    depositData: {
-      optimalUtilisationRatio: string;
-    };
-    variableBorrowData: {
-      vr0: string;
-      vr1: string;
-      vr2: string;
-    };
-    stableBorrowData: {
-      sr0: string;
-      sr1: string;
-      sr2: string;
-      sr3: string;
-      optimalStableToTotalDebtRatio: string;
-      rebalanceUpUtilisationRatio: string;
-      rebalanceUpDepositInterestRate: string;
-      rebalanceDownDelta: string;
-    };
-    capsData: {
-      deposit: number;
-      borrow: number;
-      stableBorrowPercentage: string;
-    };
-    configData: {
-      deprecated: boolean;
-      stableBorrowSupported: boolean;
-      canMintFToken: boolean;
-      flashLoanSupported: boolean;
-    };
-  };
-  loans: Partial<Record<LoanTypeDescription, LoanPoolInfo>>;
-}
-
 export interface Config {
   hub: ChainInfo;
   spokes: ChainInfo[];
-}
-
-export interface Pools {
-  loanTypes: Partial<Record<LoanTypeDescription, LoanTypeInfo>>;
-  pools: Partial<Record<TokenDescription, PoolInfo>>;
-}
-
-export interface DeployedContracts {
-  hub: HubContract;
-  spokes: Spokes;
-}
-
-export interface HubContract {
-  description: ChainDescription;
-  bridgeRouter: string;
-  wormholeDataAdapter: string;
-  wormholeCCTPAdapter: string;
-  ccipDataAdapter: string;
-  ccipTokenAdapter: string;
-  hubAdapter: string;
-  hubContract: string;
-  nodeManager: string;
-  oracleManager: string;
-  spokeManager: string;
-  accountManager: string;
-  loanManager: string;
-  libraries: {
-    userLoanLogic: string;
-    loanPoolLogic: string;
-    liquidationLogic: string;
-    loanManagerLogic: string;
-    rewardLogic: string;
-    hubPoolLogic: string;
-  };
-  loanTypes: Partial<Record<LoanTypeDescription, LoanTypeId>>;
-  tokens: Partial<Record<TokenDescription, HubTokenData>>;
-}
-
-interface Spokes {
-  [key: string]: SpokeContract;
-}
-
-export interface SpokeContract {
-  bridgeRouter: string;
-  wormholeDataAdapter: string;
-  wormholeCCTPAdapter: string;
-  ccipDataAdapter: string;
-  ccipTokenAdapter: string;
-  spokeCommon: string;
-  spokeTokens: Partial<Record<TokenDescription, SpokeTokenData>>;
 }
 
 export function getSpokesInclHub(chainsConfig: Config): ChainInfo[] {
@@ -289,90 +54,14 @@ export function getWallet(chainId: number): Wallet {
   return new Wallet(process.env.WALLET_PRIVATE_KEY_DEV1!, provider);
 }
 
+let _deployedNttContracts: undefined;
+let _nttManagersConfig: NttManagerConfig[] | undefined;
 let _config: Config | undefined;
-let _pools: Pools | undefined;
-let _deployedContracts: DeployedContracts | undefined;
 
 export function loadConfig(): Config {
   if (!_config) _config = CONFIG as Config;
   return _config!;
 }
-
-export function loanPools(): Pools {
-  if (!_pools) _pools = POOLS as Pools;
-  return _pools!;
-}
-
-export function createEmptyDeployedContracts(chains: ChainDescription[]): DeployedContracts {
-  // fail if file already exists
-  if (_deployedContracts || existsSync(DEPLOYED_CONTRACTS_FILE_PATH))
-    throw Error("Cannot override existing deployed contracts file");
-
-  // add empty hub and spokes - assume first chain is hub chain
-  const deployedContracts = EMPTY_DEPLOYED_ADDRESSES(chains[0]);
-  for (const chain of chains) deployedContracts.spokes[chain] = EMPTY_SPOKE_CONTRACT;
-
-  // write and return
-  writeFileSync(DEPLOYED_CONTRACTS_FILE_PATH, JSON.stringify(deployedContracts, null, 2) + "\n");
-  return deployedContracts;
-}
-
-export function loadDeployedContracts(): DeployedContracts {
-  if (!_deployedContracts)
-    _deployedContracts = JSON.parse(readFileSync("scripts/testnet/deployedContracts.json", { encoding: "utf-8" }));
-  return _deployedContracts!;
-}
-
-export function storeDeployedContracts(deployed: DeployedContracts) {
-  writeFileSync(DEPLOYED_CONTRACTS_FILE_PATH, JSON.stringify(deployed, null, 2) + "\n");
-}
-
-// Function to get an address of hub adapter by the adapter type
-export function getHubAdapterAddressByType(adapterType: AdapterType, hub: HubContract): string {
-  switch (adapterType) {
-    case AdapterType.HUB:
-      return hub.hubAdapter;
-    case AdapterType.WORMHOLE_DATA:
-      return hub.wormholeDataAdapter;
-    case AdapterType.WORMHOLE_CCTP:
-      return hub.wormholeCCTPAdapter;
-    case AdapterType.CCIP_DATA:
-      return hub.ccipDataAdapter;
-    case AdapterType.CCIP_TOKEN:
-      return hub.ccipTokenAdapter;
-    default:
-      throw Error("Unknown adapter type");
-  }
-}
-
-// Function to get an address of spoke adapter by the adapter type
-export function getSpokeAdapterAddressByType(adapterType: AdapterType, spoke: SpokeContract, hub: HubContract): string {
-  switch (adapterType) {
-    case AdapterType.HUB:
-      return hub.hubAdapter;
-    case AdapterType.WORMHOLE_DATA:
-      return spoke.wormholeDataAdapter;
-    case AdapterType.WORMHOLE_CCTP:
-      return spoke.wormholeCCTPAdapter;
-    case AdapterType.CCIP_DATA:
-      return spoke.ccipDataAdapter;
-    case AdapterType.CCIP_TOKEN:
-      return spoke.ccipTokenAdapter;
-    default:
-      throw Error("Unknown adapter type");
-  }
-}
-
-export const MESSAGE_SENDER_ROLE = ethers.keccak256(convertStringToBytes("MESSAGE_SENDER"));
-export const HUB_ROLE = ethers.keccak256(convertStringToBytes("HUB"));
-
-// Token and NTT related types
-
-export type NttTokenDescription = "FolksToken" | "WormholeToken" | "ETH_eth_sep" | "ETH_base_sep" | "LINK_eth_sep";
-
-let _deployedNttContracts: undefined;
-let _nttManagersConfig: NttManagerConfig[] | undefined;
-
 export interface NttToken {
   tokenName: string;
   tokenSymbol: string;

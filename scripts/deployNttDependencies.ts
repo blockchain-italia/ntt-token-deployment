@@ -5,8 +5,8 @@ import {
     SpokeNttToken__factory,
     NttManager__factory,
     TransceiverStructs__factory,
-    ERC1967Proxy__factory,
-    WormholeTransceiver__factory
+    WormholeTransceiver__factory,
+    ERC1967Proxy__factory
 } from "../ts-scripts/ethers-contracts";
 
 import {

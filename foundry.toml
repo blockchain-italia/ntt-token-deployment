@@ -13,7 +13,6 @@ remappings = [
     "@wormhole-solidity-sdk/=lib/wormhole-solidity-sdk/src/",
     "ds-test/=lib/wormhole-solidity-sdk/lib/forge-std/lib/ds-test/src/",
     "forge-std/=lib/wormhole-solidity-sdk/lib/forge-std/src/",
-    "wormhole-solidity-sdk/=lib/wormhole-solidity-sdk/src/",
     "@zeppelin/=lib/openzeppelin-contracts/",
     "@openzeppelin/=node_modules/@openzeppelin/"
 ]
