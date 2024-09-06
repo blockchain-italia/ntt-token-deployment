@@ -2,7 +2,7 @@
 pragma solidity 0.8.23;
 
 import "./external/Initializable.sol";
-import "@zeppelin/contracts/proxy/ERC1967/ERC1967Upgrade.sol";
+import "@openzeppelinFoundry/contracts/proxy/ERC1967/ERC1967Upgrade.sol";
 
 /// @dev This contract should be used as a base contract for implementation contracts
 ///      that are used with ERC1967Proxy.
@@ -33,28 +33,18 @@ abstract contract Implementation is Initializable, ERC1967Upgrade {
         bool value;
     }
 
-    bytes32 private constant MIGRATING_SLOT =
-        bytes32(uint256(keccak256("ntt.migrating")) - 1);
+    bytes32 private constant MIGRATING_SLOT = bytes32(uint256(keccak256("ntt.migrating")) - 1);
 
-    bytes32 private constant MIGRATES_IMMUTABLES_SLOT =
-        bytes32(uint256(keccak256("ntt.migratesImmutables")) - 1);
+    bytes32 private constant MIGRATES_IMMUTABLES_SLOT = bytes32(uint256(keccak256("ntt.migratesImmutables")) - 1);
 
-    function _getMigratingStorage()
-        private
-        pure
-        returns (_Migrating storage $)
-    {
+    function _getMigratingStorage() private pure returns (_Migrating storage $) {
         uint256 slot = uint256(MIGRATING_SLOT);
         assembly ("memory-safe") {
             $.slot := slot
         }
     }
 
-    function _getMigratesImmutablesStorage()
-        internal
-        pure
-        returns (_Bool storage $)
-    {
+    function _getMigratesImmutablesStorage() internal pure returns (_Bool storage $) {
         uint256 slot = uint256(MIGRATES_IMMUTABLES_SLOT);
         assembly ("memory-safe") {
             $.slot := slot
@@ -71,11 +61,7 @@ abstract contract Implementation is Initializable, ERC1967Upgrade {
         _initialize();
     }
 
-    function migrate()
-        external
-        onlyDelegateCall
-        reinitializer(_getInitializedVersion() + 1)
-    {
+    function migrate() external onlyDelegateCall reinitializer(_getInitializedVersion() + 1) {
         // NOTE: we add the reinitializer() modifier so that onlyInitializing
         // functions can be called inside
         if (!_getMigratingStorage().isMigrating) {
