@@ -20,5 +20,16 @@
     "threshold": 1,
     "outboundLimit": 100000000000000000000,
     "inboundLimit": [{ "chainId": 10002, "limit": "1000000000000000000000000" }]
+  },
+  {
+    "description": "arbitrumSepolia",
+    "token": "0x55Dd1ddA6FD843f884e9dC65944FCa9A092040Bb",
+    "mode": 1,
+    "chainId": 10003,
+    "rateLimitDuration": 3600,
+    "skipRateLimit": false,
+    "threshold": 1,
+    "outboundLimit": 100000000000000000000,
+    "inboundLimit": [{ "chainId": 10002, "limit": "1000000000000000000000000" }]
   }
 ]

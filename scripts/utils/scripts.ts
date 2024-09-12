@@ -4,27 +4,16 @@ import CONFIG from "../testnet/config.json";
 
 export type ChainDescription = "avalancheFuji" | "ethereumSepolia" | "baseSepolia" | "arbitrumSepolia" | "bscTestnet";
 
-export type NttTokenDescription = "FolksToken" | "WormholeToken" | "ETH_eth_sep" | "ETH_base_sep" | "LINK_eth_sep";
+export type NttTokenDescription = "FolksToken" | "WormholeToken";
 export interface ChainInfo {
   description: ChainDescription;
   folksChainId: number;
   rpc: string;
-  addressOracle: string;
   wormhole: {
     wormholeChainId: number;
     wormholeCore: string;
     wormholeRelayer: string;
     refundAddress: string;
-  };
-  ccip: {
-    ccipChainId: string;
-    ccipRouter: string;
-  };
-  cctp: {
-    USDCAddress: string;
-    cctpSourceDomain: number;
-    circleTokenMessenger: string;
-    circleMessageTransmitter: string;
   };
 }
 export interface Config {
