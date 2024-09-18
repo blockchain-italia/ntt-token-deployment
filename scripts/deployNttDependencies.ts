@@ -185,7 +185,6 @@ export async function deploySpokeNttManagers(
     deployedNttContracts: DeployedNttContracts,
     nttManagersConfig: NttManagerConfig[]
 ) {
-
     for (const chain of chainsToDeploy) {
         const spoke = chainsConfig.spokes.find((spoke) => spoke.description === chain);
         if (!spoke) continue;

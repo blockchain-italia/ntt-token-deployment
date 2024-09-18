@@ -114,7 +114,8 @@ export type NttManagerConfig = {
   rateLimitDuration: number;
   skipRateLimit: boolean;
   threshold: number;
-  outboundLimit: number;
+  outboundLimit: string;
+  inboundLimit: { chainId: number, limit: string }[];
 };
 
 interface SpokeNttContracts {

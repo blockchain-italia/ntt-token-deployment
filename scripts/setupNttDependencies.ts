@@ -1,25 +1,16 @@
-import { ethers } from "hardhat";
-
 import {
     HubNttToken__factory,
-    SpokeNttToken__factory,
     NttManager__factory,
-    TransceiverStructs__factory,
-    WormholeTransceiver__factory,
-    ERC1967Proxy__factory
 } from "../ts-scripts/ethers-contracts";
 
 import {
     loadConfig,
     getWallet,
-    createEmptyDeployedNttContracts,
     loadDeployedNttContracts,
     loadNttManagersConfig,
-    storeDeployedNttContracts,
     NttManagerConfig,
     ChainDescription,
     Config,
-    NttToken,
     DeployedNttContracts,
 } from "./utils/scripts";
 
@@ -35,22 +26,27 @@ async function main() {
     const chainsConfig = loadConfig();
     const deployedNttContracts = loadDeployedNttContracts();
     const nttManagersConfig = loadNttManagersConfig();
+
+    await setTokenMinter(chainsToConfigure, chainsConfig, deployedNttContracts);
+    await configureNttManagers(chainsToConfigure, chainsConfig, deployedNttContracts, nttManagersConfig);
 }
 
+main().catch(console.error);
+
 export async function setTokenMinter(
-    chainsToAdd: ChainDescription[],
+    chainsToSetup: ChainDescription[],
     chainsConfig: Config,
     deployedNttContracts: DeployedNttContracts
 ) {
 
-    await setMinterForHubNttToken(chainsToAdd, chainsConfig, deployedNttContracts);
-    await setMinterForSpokeNttTokens(chainsToAdd, chainsConfig, deployedNttContracts);
+    await setMinterForHubNttToken(chainsToSetup, chainsConfig, deployedNttContracts);
+    await setMinterForSpokeNttTokens(chainsToSetup, chainsConfig, deployedNttContracts);
 
     console.log("Minters were set for Ntt tokens");
 }
 
 export async function setMinterForHubNttToken(
-    chainsToAdd: ChainDescription[],
+    chainsToSetup: ChainDescription[],
     chainsConfig: Config,
     deployedNttContracts: DeployedNttContracts
 ) {
@@ -59,7 +55,7 @@ export async function setMinterForHubNttToken(
     const { nttToken: nttTokenAddress, nttManagerProxy: hubNttManagerProxy } = deployedHub;
     const signer = getWallet(hubChainInfo.folksChainId);
 
-    if (!chainsToAdd.includes(hubChainInfo.description) || nttTokenAddress === "") return;
+    if (!chainsToSetup.includes(hubChainInfo.description) || nttTokenAddress === "") return;
 
     const hubNttToken = HubNttToken__factory.connect(nttTokenAddress, signer);
     const tx = await hubNttToken.setMinter(hubNttManagerProxy);
@@ -68,11 +64,11 @@ export async function setMinterForHubNttToken(
 }
 
 export async function setMinterForSpokeNttTokens(
-    chainsToAdd: ChainDescription[],
+    chainsToSetup: ChainDescription[],
     chainsConfig: Config,
     deployedNttContracts: DeployedNttContracts
 ) {
-    for (const chain of chainsToAdd) {
+    for (const chain of chainsToSetup) {
         const spoke = chainsConfig.spokes.find((spoke) => spoke.description === chain);
         if (!spoke) continue;
 
@@ -91,4 +87,82 @@ export async function setMinterForSpokeNttTokens(
     }
 }
 
-main().catch(console.error);
+export async function configureNttManagers(
+    chainsToSetup: ChainDescription[],
+    chainsConfig: Config,
+    deployedNttContracts: DeployedNttContracts,
+    nttManagersConfig: NttManagerConfig[]
+) {
+
+    await setupHubNttManager(chainsToSetup, chainsConfig, deployedNttContracts, nttManagersConfig);
+    await setupSpokesNttManagers(chainsToSetup, chainsConfig, deployedNttContracts, nttManagersConfig);
+
+    console.log("Configuration for Ntt managers succeded");
+}
+
+export async function setupHubNttManager(
+    chainsToSetup: ChainDescription[],
+    chainsConfig: Config,
+    deployedNttContracts: DeployedNttContracts,
+    nttManagersConfig: NttManagerConfig[]
+) {
+    const { hub: hubChainInfo } = chainsConfig;
+    const { hub: deployedHub } = deployedNttContracts;
+    const { nttManagerProxy: hubNttManagerProxy, nttTransceiverProxy: hubTransceiverProxy } = deployedHub;
+    const signer = getWallet(hubChainInfo.folksChainId);
+
+    if (!chainsToSetup.includes(hubChainInfo.description) || hubNttManagerProxy === "") return;
+
+    const hubNttManagerConfig = nttManagersConfig.find((chainConfig) => chainConfig.description === hubChainInfo.description);
+    if (!hubNttManagerConfig) return;
+
+    const hubNttManagerContract = NttManager__factory.connect(hubNttManagerProxy, signer);
+    await hubNttManagerContract.setTransceiver(hubTransceiverProxy);
+    console.log(`transceiver address set to: ${hubTransceiverProxy}`);
+
+    await hubNttManagerContract.setOutboundLimit(hubNttManagerConfig.outboundLimit);
+    console.log(`outboundLimit set to: ${hubNttManagerConfig.outboundLimit}`);
+
+    for (const { limit, chainId } of hubNttManagerConfig.inboundLimit) {
+        await hubNttManagerContract.setInboundLimit(chainId, limit)
+        console.log(`inboundLimit for chain ${chainId} set to: ${limit}`);
+    }
+
+    await hubNttManagerContract.setThreshold(hubNttManagerConfig.threshold);
+    console.log(`Threshold configured to: ${hubNttManagerConfig.threshold}`);
+}
+
+export async function setupSpokesNttManagers(
+    chainsToSetup: ChainDescription[],
+    chainsConfig: Config,
+    deployedNttContracts: DeployedNttContracts,
+    nttManagersConfig: NttManagerConfig[]
+) {
+    for (const chain of chainsToSetup) {
+        const spoke = chainsConfig.spokes.find((spoke) => spoke.description === chain);
+        if (!spoke) continue;
+
+        const spokeNttManagerConfig = nttManagersConfig.find((chainConfig) => chainConfig.description === chain);
+        if (!spokeNttManagerConfig) continue;
+
+        const { description, folksChainId } = spoke;
+        const signer = getWallet(folksChainId);
+
+        const { nttManagerProxy: spokeNttManagerProxy, nttTransceiverProxy: spokeTransceiverProxy } = deployedNttContracts.spokes[description];
+
+        const spokeNttManagerContract = NttManager__factory.connect(spokeNttManagerProxy, signer);
+        await spokeNttManagerContract.setTransceiver(spokeTransceiverProxy);
+        console.log(`transceiver address set to: ${spokeTransceiverProxy}`);
+
+        await spokeNttManagerContract.setOutboundLimit(spokeNttManagerConfig.outboundLimit);
+        console.log(`outboundLimit set to: ${spokeNttManagerConfig.outboundLimit}`);
+
+        for (const { limit, chainId } of spokeNttManagerConfig.inboundLimit) {
+            await spokeNttManagerContract.setInboundLimit(chainId, limit)
+            console.log(`inboundLimit for chain ${chainId} set to: ${limit}`);
+        }
+
+        await spokeNttManagerContract.setThreshold(spokeNttManagerConfig.threshold);
+        console.log(`Threshold configured to: ${spokeNttManagerConfig.threshold}`);
+    }
+}
