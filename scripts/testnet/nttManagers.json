@@ -1,7 +1,7 @@
 [
   {
     "description": "avalancheFuji",
-    "token": "0x55Dd1ddA6FD843f884e9dC65944FCa9A092040Bb",
+    "token": "",
     "mode": 1,
     "chainId": 6,
     "rateLimitDuration": 3600,
@@ -15,7 +15,7 @@
   },
   {
     "description": "ethereumSepolia",
-    "token": "0x3B7C6e3f75D796c3b7cC90D4cDe1B335536B9CC6",
+    "token": "",
     "mode": 0,
     "chainId": 10002,
     "rateLimitDuration": 3600,
@@ -28,10 +28,10 @@
     ]
   },
   {
-    "description": "arbitrumSepolia",
-    "token": "0x55Dd1ddA6FD843f884e9dC65944FCa9A092040Bb",
+    "description": "baseSepolia",
+    "token": "",
     "mode": 1,
-    "chainId": 10003,
+    "chainId": 10004,
     "rateLimitDuration": 3600,
     "skipRateLimit": false,
     "threshold": 1,
