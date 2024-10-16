@@ -1,0 +1,29 @@
+{
+  "hub": {
+    "description": "avalancheFuji",
+    "nttToken": "0xC3230755Ae6e74d29c345d14A56abf6d29943C2C",
+    "nttManagerImplementation": "",
+    "nttManagerProxy": "",
+    "nttTransceiverImplementation": "",
+    "nttTransceiverProxy": "",
+    "nttTransceiverStructs": ""
+  },
+  "spokes": {
+    "ethereumSepolia": {
+      "nttToken": "0xA05F94Ac0E87aEC873C76Cf538f8329f190C83C4",
+      "nttManagerImplementation": "",
+      "nttManagerProxy": "",
+      "nttTransceiverImplementation": "",
+      "nttTransceiverProxy": "",
+      "nttTransceiverStructs": ""
+    },
+    "baseSepolia": {
+      "nttToken": "0x0D83E891e43444D09A54Aac40b14d4527828fEE6",
+      "nttManagerImplementation": "",
+      "nttManagerProxy": "",
+      "nttTransceiverImplementation": "",
+      "nttTransceiverProxy": "",
+      "nttTransceiverStructs": ""
+    }
+  }
+}

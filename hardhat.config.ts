@@ -32,13 +32,14 @@ const config: HardhatUserConfig = {
     coinmarketcap: CMC_API_KEY,
   },
   solidity: {
-    version: "0.8.23",
+    version: "0.8.20",
     settings: {
-      evmVersion: "paris",
+      evmVersion: "london",
       optimizer: {
         enabled: true,
-        runs: 200,
+        runs: 3000,
       },
+      // viaIR: true,
     },
   },
   defaultNetwork: "hardhat",
@@ -56,16 +57,19 @@ const config: HardhatUserConfig = {
       url: AVALANCHE_FUJI_RPC_URL,
       chainId: 43113,
       accounts: PRIVATE_KEY ? [PRIVATE_KEY] : [],
+      allowUnlimitedContractSize: true,
     },
     ethereumSepolia: {
       url: ETHEREUM_SEPOLIA_RPC_URL,
       chainId: 11155111,
       accounts: PRIVATE_KEY ? [PRIVATE_KEY] : [],
+      allowUnlimitedContractSize: true,
     },
     baseSepolia: {
       url: BASE_SEPOLIA_RPC_URL,
       chainId: 84532,
       accounts: PRIVATE_KEY ? [PRIVATE_KEY] : [],
+      allowUnlimitedContractSize: true,
     },
     arbitrumSepolia: {
       url: ARB_SEPOLIA_RPC_URL,

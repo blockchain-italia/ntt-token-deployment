@@ -68,7 +68,7 @@ const EMPTY_DEPLOYED_NTT_ADDRESSES = (hubDescription: ChainDescription): Deploye
     nttManagerProxy: "",
     nttTransceiverImplementation: "",
     nttTransceiverProxy: "",
-    nttTransceiverStructs: ""
+    nttTransceiverStructs: "",
   },
   spokes: {},
 });
@@ -79,7 +79,7 @@ const EMPTY_SPOKE_NTT_CONTRACT: SpokeNttContract = {
   nttManagerProxy: "",
   nttTransceiverImplementation: "",
   nttTransceiverProxy: "",
-  nttTransceiverStructs: ""
+  nttTransceiverStructs: "",
 };
 
 export interface DeployedNttContracts {
@@ -98,7 +98,7 @@ export interface HubNttContract {
 }
 
 export interface SpokeNttContract {
-  nttToken: string,
+  nttToken: string;
   nttManagerImplementation: string;
   nttManagerProxy: string;
   nttTransceiverImplementation: string;
@@ -115,7 +115,7 @@ export type NttManagerConfig = {
   skipRateLimit: boolean;
   threshold: number;
   outboundLimit: string;
-  inboundLimit: { chainId: number, limit: string }[];
+  inboundLimit: { chainId: number; limit: string }[];
 };
 
 interface SpokeNttContracts {
@@ -142,7 +142,9 @@ export function createEmptyDeployedNttContracts(chains: ChainDescription[]): Dep
 
 export function loadDeployedNttContracts(): DeployedNttContracts {
   if (!_deployedNttContracts)
-    _deployedNttContracts = JSON.parse(readFileSync("scripts/testnet/deployedNTTContracts.json", { encoding: "utf-8" }));
+    _deployedNttContracts = JSON.parse(
+      readFileSync("scripts/testnet/deployedNTTContracts.json", { encoding: "utf-8" })
+    );
   return _deployedNttContracts!;
 }
 
@@ -155,4 +157,3 @@ export function loadNttManagersConfig(): NttManagerConfig[] {
     _nttManagersConfig = JSON.parse(readFileSync("scripts/testnet/nttManagers.json", { encoding: "utf-8" }));
   return _nttManagersConfig!;
 }
-

@@ -6,8 +6,8 @@
 
 pragma solidity ^0.8.19;
 
-import {ContextUpgradeable} from "./ContextUpgradeable.sol";
-import {Initializable} from "./Initializable.sol";
+import { ContextUpgradeable } from "./ContextUpgradeable.sol";
+import { Initializable } from "./Initializable.sol";
 import "../../interfaces/IOwnableUpgradeable.sol";
 
 /**

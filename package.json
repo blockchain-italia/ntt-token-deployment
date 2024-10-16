@@ -19,6 +19,7 @@
     "typechain": "typechain --target ethers-v6 --out-dir ./ts-scripts/ethers-contracts ./out/**/*.json"
   },
   "devDependencies": {
+    "@folks-finance/xchain-sdk": "^0.0.28",
     "@nomicfoundation/hardhat-foundry": "^1.1.2",
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "@openzeppelin/contracts": "^5.0.2",

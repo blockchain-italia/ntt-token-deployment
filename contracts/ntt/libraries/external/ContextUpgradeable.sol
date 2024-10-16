@@ -6,7 +6,7 @@
 
 pragma solidity ^0.8.19;
 
-import {Initializable} from "./Initializable.sol";
+import { Initializable } from "./Initializable.sol";
 
 /**
  * @dev Provides information about the current execution context, including the
