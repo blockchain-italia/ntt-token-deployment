@@ -57,7 +57,14 @@ library TransceiverStructs {
     }
 
     function nttManagerMessageDigest(uint16 sourceChainId, NttManagerMessage memory m) public pure returns (bytes32) {
-        return keccak256(abi.encodePacked(sourceChainId, encodeNttManagerMessage(m)));
+        return _nttManagerMessageDigest(sourceChainId, encodeNttManagerMessage(m));
+    }
+
+    function _nttManagerMessageDigest(
+        uint16 sourceChainId,
+        bytes memory encodedNttManagerMessage
+    ) internal pure returns (bytes32) {
+        return keccak256(abi.encodePacked(sourceChainId, encodedNttManagerMessage));
     }
 
     function encodeNttManagerMessage(NttManagerMessage memory m) public pure returns (bytes memory encoded) {
@@ -91,6 +98,8 @@ library TransceiverStructs {
     ///      - sourceToken - 32 bytes
     ///      - to - 32 bytes
     ///      - toChain - 2 bytes
+    ///      - additionalPayloadLength - 2 bytes, optional
+    ///      - additionalPayload - `additionalPayloadLength` bytes
     struct NativeTokenTransfer {
         /// @notice Amount being transferred (big-endian u64 and u8 for decimals)
         TrimmedAmount amount;
@@ -100,12 +109,32 @@ library TransceiverStructs {
         bytes32 to;
         /// @notice Chain ID of the recipient
         uint16 toChain;
+        /// @notice Custom payload
+        /// @dev Recommended that the first 4 bytes are a unique prefix
+        bytes additionalPayload;
     }
 
     function encodeNativeTokenTransfer(NativeTokenTransfer memory m) public pure returns (bytes memory encoded) {
         // The `amount` and `decimals` fields are encoded in reverse order compared to how they are declared in the
         // `TrimmedAmount` type. This is consistent with the Rust NTT implementation.
         TrimmedAmount transferAmount = m.amount;
+        if (m.additionalPayload.length > 0) {
+            if (m.additionalPayload.length > type(uint16).max) {
+                revert PayloadTooLong(m.additionalPayload.length);
+            }
+            uint16 additionalPayloadLength = uint16(m.additionalPayload.length);
+            return
+                abi.encodePacked(
+                    NTT_PREFIX,
+                    transferAmount.getDecimals(),
+                    transferAmount.getAmount(),
+                    m.sourceToken,
+                    m.to,
+                    m.toChain,
+                    additionalPayloadLength,
+                    m.additionalPayload
+                );
+        }
         return
             abi.encodePacked(
                 NTT_PREFIX,
@@ -141,6 +170,13 @@ library TransceiverStructs {
         (nativeTokenTransfer.sourceToken, offset) = encoded.asBytes32Unchecked(offset);
         (nativeTokenTransfer.to, offset) = encoded.asBytes32Unchecked(offset);
         (nativeTokenTransfer.toChain, offset) = encoded.asUint16Unchecked(offset);
+        // The additional payload may be omitted, but if it is included, it is prefixed by a u16 for its length.
+        // If there are at least 2 bytes remaining, attempt to parse the additional payload.
+        if (encoded.length >= offset + 2) {
+            uint256 payloadLength;
+            (payloadLength, offset) = encoded.asUint16Unchecked(offset);
+            (nativeTokenTransfer.additionalPayload, offset) = encoded.sliceUnchecked(offset, payloadLength);
+        }
         encoded.checkLength(offset);
     }
 

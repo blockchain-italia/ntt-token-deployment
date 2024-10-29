@@ -26,13 +26,16 @@ abstract contract WormholeTransceiverState is IWormholeTransceiverState, Transce
     IWormhole public immutable wormhole;
     IWormholeRelayer public immutable wormholeRelayer;
     ISpecialRelayer public immutable specialRelayer;
+    /// @dev We don't check this in `_checkImmutables` since it's set at construction
+    ///      through `block.chainid`.
     uint256 immutable wormholeTransceiver_evmChainId;
+    /// @dev We purposely avoid checking this in `_checkImmutables` to allow tweaking it
+    ///      without needing to allow modification of security critical immutables.
     uint256 public immutable gasLimit;
 
     // ==================== Constants ================================================
 
     /// @dev Prefix for all TransceiverMessage payloads
-    ///      This is 0x99'E''W''H'
     /// @notice Magic string (constant value set by messaging provider) that idenfies the payload as an transceiver-emitted payload.
     ///         Note that this is not a security critical field. It's meant to be used by messaging providers to identify which messages are Transceiver-related.
     bytes4 constant WH_TRANSCEIVER_PAYLOAD_PREFIX = 0x9945FF10;

@@ -86,6 +86,8 @@ abstract contract Transceiver is ITransceiver, PausableOwnable, ReentrancyGuardU
         return nttManagerToken;
     }
 
+    function getTransceiverType() external view virtual returns (string memory);
+
     /// =============== TRANSCEIVING LOGIC ===============================================
 
     /// @inheritdoc ITransceiver

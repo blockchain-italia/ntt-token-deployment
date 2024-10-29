@@ -30,7 +30,7 @@ import "./WormholeTransceiverState.sol";
 contract WormholeTransceiver is IWormholeTransceiver, IWormholeReceiver, WormholeTransceiverState {
     using BytesParsing for bytes;
 
-    string public constant WORMHOLE_TRANSCEIVER_VERSION = "1.0.0";
+    string public constant WORMHOLE_TRANSCEIVER_VERSION = "1.1.0";
 
     constructor(
         address nttManager,
@@ -51,6 +51,10 @@ contract WormholeTransceiver is IWormholeTransceiver, IWormholeReceiver, Wormhol
     {}
 
     // ==================== External Interface ===============================================
+
+    function getTransceiverType() external pure override returns (string memory) {
+        return "wormhole";
+    }
 
     /// @inheritdoc IWormholeTransceiver
     function receiveMessage(bytes memory encodedMessage) external {
