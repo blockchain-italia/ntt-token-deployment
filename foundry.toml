@@ -1,0 +1,22 @@
+[profile.default]
+solc_version = '0.8.20'
+src = "contracts"
+out = "out"
+libs = ["lib"]
+test = 'test'
+cache_path  = 'cache_forge'
+evm_version = 'london'
+optimizer = true
+optimizer_runs = 3000
+# via_ir = true
+ignored_error_codes = []
+remappings = [
+    "@wormhole-solidity-sdk/=lib/wormhole-solidity-sdk/src/",
+    "ds-test/=lib/wormhole-solidity-sdk/lib/forge-std/lib/ds-test/src/",
+    "forge-std/=lib/wormhole-solidity-sdk/lib/forge-std/src/",
+    "@openzeppelinFoundry/=lib/openzeppelin-contracts/",
+    "@openzeppelin/=node_modules/@openzeppelin/"
+]
+
+[profile.prod]
+via_ir = true

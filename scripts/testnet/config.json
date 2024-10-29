@@ -1,0 +1,74 @@
+{
+  "hub": {
+    "description": "avalancheFuji",
+    "folksChainId": 1,
+    "rpc": "AVALANCHE_FUJI_RPC_URL",
+    "wormhole": {
+      "wormholeChainId": 6,
+      "wormholeCore": "0x7bbcE28e64B3F8b84d876Ab298393c38ad7aac4C",
+      "wormholeRelayer": "0xA3cF45939bD6260bcFe3D66bc73d60f19e49a8BB",
+      "refundAddress": "0x16870a6A85cD152229B97d018194d66740f932d6"
+    }
+  },
+  "spokes": [
+    {
+      "description": "bscTestnet",
+      "folksChainId": 3,
+      "rpc": "BSC_TESTNET_RPC_URL",
+      "wormhole": {
+        "wormholeChainId": 4,
+        "wormholeCore": "0x68605AD7b15c732a30b1BbC62BE8F2A509D74b4D",
+        "wormholeRelayer": "0x80aC94316391752A193C1c47E27D382b507c93F3",
+        "refundAddress": "0x16870a6A85cD152229B97d018194d66740f932d6"
+      }
+    },
+    {
+      "description": "ethereumSepolia",
+      "folksChainId": 6,
+      "rpc": "ETHEREUM_SEPOLIA_RPC_URL",
+      "addressOracle": "0x2b760759e4f8D994BeB2B9aFBA8De37eCf13F9B3",
+      "wormhole": {
+        "wormholeChainId": 10002,
+        "wormholeCore": "0x4a8bc80Ed5a4067f1CCf107057b8270E0cC11A78",
+        "wormholeRelayer": "0x7B1bD7a6b4E61c2a123AC6BC2cbfC614437D0470",
+        "refundAddress": "0x16870a6A85cD152229B97d018194d66740f932d6"
+      }
+    },
+    {
+      "description": "baseSepolia",
+      "folksChainId": 7,
+      "rpc": "BASE_SEPOLIA_RPC_URL",
+      "addressOracle": "0x2b760759e4f8D994BeB2B9aFBA8De37eCf13F9B3",
+      "wormhole": {
+        "wormholeChainId": 10004,
+        "wormholeCore": "0x79A1027a6A159502049F10906D333EC57E95F083",
+        "wormholeRelayer": "0x93BAD53DDfB6132b0aC8E37f6029163E63372cEE",
+        "refundAddress": "0x16870a6A85cD152229B97d018194d66740f932d6"
+      }
+    },
+    {
+      "description": "arbitrumSepolia",
+      "folksChainId": 8,
+      "rpc": "ARB_SEPOLIA_RPC_URL",
+      "addressOracle": "0x2b760759e4f8D994BeB2B9aFBA8De37eCf13F9B3",
+      "wormhole": {
+        "wormholeChainId": 10003,
+        "wormholeCore": "0x6b9C8671cdDC8dEab9c719bB87cBd3e782bA6a35",
+        "wormholeRelayer": "0x7B1bD7a6b4E61c2a123AC6BC2cbfC614437D0470",
+        "refundAddress": "0x16870a6A85cD152229B97d018194d66740f932d6"
+      }
+    },
+    {
+      "description": "optimismSepolia",
+      "folksChainId": 9,
+      "rpc": "OPTIMISM_SEPOLIA_RPC_URL",
+      "addressOracle": "0x2b760759e4f8D994BeB2B9aFBA8De37eCf13F9B3",
+      "wormhole": {
+        "wormholeChainId": 10005,
+        "wormholeCore": "0x31377888146f3253211EFEf5c676D41ECe7D58Fe",
+        "wormholeRelayer": "0x93BAD53DDfB6132b0aC8E37f6029163E63372cEE",
+        "refundAddress": "0x16870a6A85cD152229B97d018194d66740f932d6"
+      }
+    }
+  ]
+}

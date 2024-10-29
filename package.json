@@ -1,0 +1,34 @@
+{
+  "name": "ntt-token-deployment",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "build:forge": "forge build",
+    "build:hardhat": "npx hardhat compile",
+    "build": "npm run build:forge; npm run build:hardhat",
+    "clean:forge": "forge clean",
+    "clean:hardhat": "npx hardhat clean",
+    "clean": "npm run clean:forge; npm run clean:hardhat",
+    "format": "prettier --write .",
+    "script": "npx tsx",
+    "typechain": "typechain --target ethers-v6 --out-dir ./ts-scripts/ethers-contracts ./out/**/*.json"
+  },
+  "devDependencies": {
+    "@folks-finance/xchain-sdk": "^0.0.28",
+    "@nomicfoundation/hardhat-foundry": "^1.1.2",
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@openzeppelin/contracts": "^5.0.2",
+    "@typechain/ethers-v6": "^0.5.1",
+    "dotenv": "^16.4.5",
+    "hardhat": "^2.22.10",
+    "hardhat-deploy": "^0.12.4",
+    "prettier": "^3.3.3",
+    "prettier-plugin-solidity": "^1.4.1",
+    "typescript": "^5.5.4"
+  }
+}

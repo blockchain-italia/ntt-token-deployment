@@ -1,0 +1,3 @@
+@wormhole-solidity-sdk/=lib/wormhole-solidity-sdk/src/
+@openzeppelinFoundry/=lib/openzeppelin-contracts/
+@openzeppelin/=node_modules/@openzeppelin/

@@ -1,0 +1,44 @@
+[
+  {
+    "description": "avalancheFuji",
+    "token": "",
+    "mode": 1,
+    "chainId": 6,
+    "rateLimitDuration": 3600,
+    "skipRateLimit": false,
+    "threshold": 1,
+    "outboundLimit": 100000000000000000000,
+    "inboundLimit": [
+      { "chainId": 10002, "limit": "440000000000000000000000" },
+      { "chainId": 10003, "limit": "140000000000000000000000" }
+    ]
+  },
+  {
+    "description": "ethereumSepolia",
+    "token": "",
+    "mode": 0,
+    "chainId": 10002,
+    "rateLimitDuration": 3600,
+    "skipRateLimit": false,
+    "threshold": 1,
+    "outboundLimit": 4000000000000000000000000,
+    "inboundLimit": [
+      { "chainId": 1, "limit": "1000000000000000000000" },
+      { "chainId": 10002, "limit": "120000000000000000000000" }
+    ]
+  },
+  {
+    "description": "baseSepolia",
+    "token": "",
+    "mode": 1,
+    "chainId": 10004,
+    "rateLimitDuration": 3600,
+    "skipRateLimit": false,
+    "threshold": 1,
+    "outboundLimit": 100000000000000000000,
+    "inboundLimit": [
+      { "chainId": 6, "limit": "1000000000000000000000" },
+      { "chainId": 10002, "limit": "1000000000000000000000000" }
+    ]
+  }
+]
